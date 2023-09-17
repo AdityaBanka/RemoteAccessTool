@@ -2,6 +2,16 @@
 #include <winsock2.h>
 #pragma comment(lib, "ws2_32.lib")
 
+/*
+We will be using this structure to set state variables for internal tooling
+mostly used for debugging the code and providing crude functionality inside
+the code such as, state of printing, baud rate, and other related capabilities.
+*/
+struct CLIENT_STATE
+{
+    int printing_state; //0 - disable, 1 - enable
+}clientState;
+
 void initialize_WSA_API()
 {
     WSADATA wsaData;
@@ -20,17 +30,27 @@ void initialize_WSA_API()
 
 void createClient(char *IP_Address, int portNumber)
 {
+    printf("Initializing socket..\n");
     struct sockaddr_in address;
     address.sin_addr.s_addr = inet_addr(IP_Address);
     address.sin_family = AF_INET;
     address.sin_port = hton(portNumber);
 
+    printf("1. Socket Creation : ");
     SOCKET socketFD = INVALID_SOCKET;
+    socketFD = socket(AF_INET, SOCK_STREAM, 0);
+    if(socketFD == INVALID_SOCKET)
+    {
+        printf("Failed due->%d\n", WSAGetLastError());
+        WSACleanup();
+        return;
+    }
 }
 
 int main()
 {
-    
+    clientState.printing_state = 1;
+
     SOCKET sock = INVALID_SOCKET;
     struct sockaddr_in serverAddr;
 
