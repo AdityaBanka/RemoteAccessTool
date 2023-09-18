@@ -3,7 +3,7 @@
 #include <winsock2.h>
 
 using namespace std;
-//hello
+
 class SERVER
 {
 public:
